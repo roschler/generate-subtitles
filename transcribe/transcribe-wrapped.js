@@ -150,6 +150,8 @@ async function transcribe ({
 
       const whisperProcess = spawn(whisperPath, arguments);
 
+      // ROS: This project uses multiple Whisper processes, one to
+      //  service each client (and perhaps each upload/job).
       let serverNumber = topLevelValue;
 
       if (serverNumber === 1) {
@@ -164,12 +166,15 @@ async function transcribe ({
         spawnedProcess: whisperProcess,
         serverNumber,
       }
+
+      // ROS: This is where the Whisper process handles
+      //  are saved so that they can be destroyed later.
       global['transcriptions'].push(process)
 
       /** FIND AUTO-DETECTED LANGUAGE **/
       let foundLanguage;
 
-      //  console output from stdoutt
+      //  console output from stdout
       whisperProcess.stdout.on('data', data => {
         websocketConnection.send(JSON.stringify(`stdout: ${data}`), function () {});
         l(`STDOUT: ${data}`);
@@ -265,6 +270,8 @@ async function transcribe ({
 
       /** AFTER WHISPER FINISHES, DO THE FILE MANIPULATION / TRANSLATION **/
       whisperProcess.on('close', async (code) => {
+        // ROS: THIS is where the final product (i.e. - the transcribed text)
+        //  is received!
         try {
           l('code');
           l(code);

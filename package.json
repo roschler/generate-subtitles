@@ -30,6 +30,7 @@
     "fs-extra": "^10.1.0",
     "google-translate-api-browser": "^3.0.0",
     "jade": "~1.11.0",
+    "jsonfile": "^6.1.0",
     "language-name-map": "^0.3.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
